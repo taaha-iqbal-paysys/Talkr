@@ -510,7 +510,7 @@
 
   <script>
     // Configuration - Update this with your backend URL
-    const BACKEND_URL = 'https://aaf5fe64ef5d.ngrok-free.app';
+    const BACKEND_URL = 'http://talkr.paysyslabs.com/';
     
     // Listen for messages from the popup window
     window.addEventListener('message', function(event) {
@@ -529,9 +529,6 @@
     // fetch(`${BACKEND_URL}/api/config`)
     fetch(`${BACKEND_URL}/api/config`, {
         method: "GET",
-        headers: {
-          "ngrok-skip-browser-warning": "69420",
-        },
       })
       .then(response => response.json())
       .then(config => {
@@ -699,11 +696,7 @@
         
         // Make the API request to check authentication status
         // const response = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`);
-        const response = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`, {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
-        });
+        const response = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`);
 
         const result = await response.json();
         console.log("Auth verification result:", result);
