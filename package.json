@@ -1,0 +1,14 @@
+{
+  "name": "shabana-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for Shabana Email-WhatsApp Bridge system",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["email", "whatsapp", "bridge", "frontend", "static"],
+  "author": "Shabana Team",
+  "license": "MIT"
+}

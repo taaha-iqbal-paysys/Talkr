@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❌ Authentication Failed - Shabana</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0a192f, #0f2c45);
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(255, 107, 53, 0.05), transparent 60%);
+            animation: moveLight 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes moveLight {
+            0% { transform: translate(0%, 0%); }
+            50% { transform: translate(25%, 25%); }
+            100% { transform: translate(0%, 0%); }
+        }
+
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            background: rgba(20, 30, 50, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+            text-align: center;
+            margin: 10px;
+        }
+
+        .error-icon {
+            font-size: clamp(48px, 12vw, 72px);
+            color: #ff6b35;
+            margin-bottom: 20px;
+            animation: shake 1s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        h1 {
+            color: #ff6b35;
+            font-size: clamp(24px, 6vw, 32px);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .error-info {
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #ff8c42;
+        }
+
+        .error-message {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .help-info {
+            background: rgba(0, 255, 132, 0.1);
+            border: 1px solid rgba(0, 255, 132, 0.3);
+            color: #66ffaa;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: clamp(13px, 3vw, 14px);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .retry-button {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: #fff;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(14px, 3.5vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            min-height: 44px;
+        }
+
+        .close-button {
+            background: linear-gradient(90deg, #6c757d, #868e96);
+            color: #fff;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(14px, 3.5vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            min-height: 44px;
+        }
+
+        .retry-button:hover, .close-button:hover {
+            transform: scale(1.05);
+        }
+
+        .auto-close-info {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            color: #ffcc66;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: clamp(12px, 3vw, 14px);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+                margin: 5px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .button-group button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-icon">❌</div>
+        <h1>Authentication Failed</h1>
+        
+        <div class="error-info">
+            <div class="error-message">
+                <strong>⚠️ Unable to complete email authentication</strong>
+            </div>
+            <div class="error-message" id="errorDetails">
+                The authentication process was cancelled or failed to complete.
+            </div>
+        </div>
+        
+        <div class="help-info">
+            <strong>💡 What you can do:</strong>
+            <ul style="margin: 10px 0 0 20px; padding: 0;">
+                <li>Try the authentication process again</li>
+                <li>Make sure you're allowing pop-ups in your browser</li>
+                <li>Check that you have a stable internet connection</li>
+                <li>Clear your browser cache and cookies if the issue persists</li>
+            </ul>
+        </div>
+        
+        <div class="button-group">
+            <button class="retry-button" onclick="retryAuthentication()">Try Again</button>
+            <button class="close-button" onclick="closeWindow()">Close Window</button>
+        </div>
+        
+        <div class="auto-close-info">
+            💡 This window will automatically close in <span id="countdown">10</span> seconds.
+        </div>
+    </div>
+
+    <script>
+        // Get error details from URL parameters if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error') || 'Authentication cancelled or failed';
+        const provider = urlParams.get('provider') || 'Email';
+        
+        // Update error message
+        document.getElementById('errorDetails').textContent = `${provider} authentication failed: ${error}`;
+        
+        // Send error message to parent window
+        if (window.opener) {
+            window.opener.postMessage({
+                status: 'error',
+                provider: provider,
+                error: error
+            }, '*');
+        }
+        
+        // Auto-close countdown
+        let countdown = 10;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                closeWindow();
+            }
+        }, 1000);
+        
+        function retryAuthentication() {
+            // Close this window and let the parent handle the retry
+            if (window.opener) {
+                window.opener.postMessage({
+                    status: 'retry',
+                    provider: provider
+                }, '*');
+                window.close();
+            } else {
+                // Redirect back to registration page
+                window.location.href = '/user-register.html';
+            }
+        }
+        
+        function closeWindow() {
+            // Try different methods to close the window
+            if (window.opener) {
+                window.close();
+            } else {
+                // If this doesn't work, try redirecting to parent
+                try {
+                    window.history.back();
+                } catch (e) {
+                    // Last resort - redirect to main page
+                    window.location.href = '/';
+                }
+            }
+        }
+        
+        // Handle cases where window.close() might not work
+        window.addEventListener('beforeunload', () => {
+            clearInterval(timer);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shabana - Email & WhatsApp Bridge</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(145deg, #0a192f, #0f2c45);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: auto;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0, 255, 204, 0.05), transparent 60%);
+      animation: moveLight 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes moveLight {
+      0% { transform: translate(0%, 0%); }
+      50% { transform: translate(25%, 25%); }
+      100% { transform: translate(0%, 0%); }
+    }
+
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      background: rgba(20, 30, 50, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 255, 140, 0.2);
+      animation: pulse-glow 3s infinite ease-in-out;
+      text-align: center;
+      margin: 40px 20px;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(20, 30, 50, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(84, 110, 168, 0.5);
+      }
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #00ff84;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #66ffaa;
+      font-size: 18px;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .registration-options {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 30px;
+      margin: 40px 0;
+    }
+
+    .option-card {
+      background: rgba(15, 30, 50, 0.9);
+      padding: 30px 20px;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+      display: block;
+      text-align: center;
+    }
+
+    .option-card:hover {
+      transform: translateY(-5px);
+      border-color: #00ff84;
+      box-shadow: 0 10px 20px rgba(0, 255, 132, 0.2);
+    }
+
+    .option-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .option-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .user-title {
+      color: #00ff84;
+    }
+
+    .option-description {
+      font-size: 14px;
+      color: #cccccc;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 15px auto 0 auto;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .feature-list li {
+      margin: 8px 0;
+      font-size: 13px;
+    }
+
+    .info-section {
+      background: rgba(0, 255, 132, 0.1);
+      border: 1px solid rgba(0, 255, 132, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 30px 0;
+      color: #66ffaa;
+    }
+
+    .how-it-works {
+      background: rgba(255, 165, 0, 0.1);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      color: #ffcc66;
+    }
+
+    @media (min-width: 769px) {
+      .registration-options {
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .option-card {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 20px 10px;
+      }
+      
+      .logo {
+        font-size: 36px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .subtitle {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🌟</div>
+    <h1>Shabana</h1>
+    <p class="subtitle">Email & WhatsApp Communication Bridge</p>
+
+    <div class="info-section how-it-works">
+      <h3>📋 New System Architecture</h3>
+      <p><strong>Admin-Centralized Communication:</strong> Only one admin manages WhatsApp for all users. Users register with email only and communicate through the admin's WhatsApp number.</p>
+    </div>
+
+    <div class="registration-options">
+      <a href="/user-register.html" class="option-card">
+        <div class="option-icon">👤</div>
+        <div class="option-title user-title">User Registration</div>
+        <div class="option-description">
+          Regular user email setup
+          <ul class="feature-list">
+            <li>📧 Email authentication only</li>
+            <li>📲 Provide WhatsApp number for ID</li>
+            <li>💬 Send messages to admin's WhatsApp</li>
+            <li>🔄 System responses via admin</li>
+          </ul>
+        </div>
+      </a>
+    </div>
+
+    <div class="info-section">
+      <h3>✨ How Communication Works</h3>
+      <ol style="text-align: left; margin: 0;">
+        <li><strong>User sends message:</strong> To admin's WhatsApp number</li>
+        <li><strong>System processes:</strong> Email editing, document analysis, etc.</li>
+        <li><strong>Admin relays response:</strong> Back to user through WhatsApp</li>
+        <li><strong>Seamless experience:</strong> Users don't need WhatsApp registration</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>

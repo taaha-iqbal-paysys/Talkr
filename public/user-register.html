@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Registration - Shabana</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(145deg, #0a192f, #0f2c45);
+      color: #ffffff;
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(0, 255, 204, 0.05), transparent 60%);
+      animation: moveLight 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes moveLight {
+      0% { transform: translate(0%, 0%); }
+      50% { transform: translate(25%, 25%); }
+      100% { transform: translate(0%, 0%); }
+    }
+
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      background: rgba(20, 30, 50, 0.95);
+      padding: 30px 20px;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 255, 140, 0.2);
+      animation: pulse-glow 3s infinite ease-in-out;
+      text-align: center;
+      margin: 10px;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 10px rgba(20, 30, 50, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(84, 110, 168, 0.5);
+      }
+    }
+
+    .emoji {
+      font-size: clamp(32px, 8vw, 48px);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #00ff84;
+      font-size: clamp(20px, 5vw, 26px);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      color: #66ffaa;
+      font-size: clamp(12px, 3vw, 14px);
+      margin-bottom: 25px;
+      font-weight: 300;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: clamp(16px, 4vw, 20px);
+      line-height: 1.2;
+    }
+
+    .step {
+      margin: 15px 0;
+      padding: 25px 15px;
+      background-color: rgba(15, 30, 50, 0.9);
+      border-radius: 16px;
+      display: none;
+      border: 1px solid #2b445c;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .form-group {
+      margin: 20px 0;
+    }
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      padding: 14px 12px;
+      border: none;
+      border-radius: 12px;
+      font-size: clamp(14px, 3.5vw, 16px);
+      background-color: #102a43;
+      color: #ffffff;
+      text-align: center;
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+
+    input::placeholder {
+      color: #6c89a3;
+    }
+
+    button {
+      background: linear-gradient(90deg, #00d084, #00ff84);
+      color: #fff;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: clamp(14px, 3.5vw, 16px);
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin: 8px 5px;
+      min-height: 44px;
+      box-sizing: border-box;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      transform: scale(1.03);
+    }
+
+    button:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .warning-button {
+      background: linear-gradient(90deg, #ff6b35, #ff8c42);
+    }
+
+    .cancel-button {
+      background: linear-gradient(90deg, #6c757d, #868e96);
+    }
+
+    .whatsapp-button {
+      background: linear-gradient(90deg, #25d366, #128c7e);
+      color: #fff;
+      font-size: clamp(14px, 3.5vw, 16px);
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    }
+
+    .whatsapp-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .return-button {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      color: #fff;
+      font-size: clamp(14px, 3.5vw, 16px);
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    .return-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+
+    .status {
+      margin: 20px auto;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      text-align: center;
+      width: fit-content;
+      max-width: 90%;
+      font-size: clamp(13px, 3vw, 14px);
+      line-height: 1.3;
+    }
+
+    .success {
+      background-color: #1f6f3e;
+      border: 1px solid #2ea043;
+      color: #d2f4d3;
+    }
+
+    .error {
+      background-color: #682c2c;
+      border: 1px solid #f85149;
+      color: #fca5a5;
+    }
+
+    .warning {
+      background-color: #3d2e00;
+      border: 1px solid #f2c94c;
+      color: #f1c40f;
+    }
+
+    img.google-logo {
+      width: clamp(100px, 25vw, 150px);
+      height: auto;
+      cursor: pointer;
+      filter: drop-shadow(0 0 5px #25d366aa);
+    }
+
+    .user-exists-message {
+      background-color: rgba(255, 107, 53, 0.2);
+      border: 2px solid #ff6b35;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      font-size: clamp(13px, 3vw, 14px);
+      line-height: 1.4;
+    }
+
+    .gmail-logo-wrapper, .outlook-logo-wrapper {
+      width: clamp(70px, 15vw, 100px);
+      height: clamp(70px, 15vw, 100px);
+      border-radius: 50%;
+      background-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px rgba(0, 255, 140, 0.4);
+      transition: transform 0.2s;
+      cursor: pointer;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .gmail-logo-wrapper:hover,
+    .outlook-logo-wrapper:hover {
+      transform: scale(1.05);
+    }
+
+    .email-logo {
+      max-width: 80%;
+      max-height: 80%;
+    }
+
+    .outlook-logo {
+      max-width: 60%;
+      max-height: 60%;
+    }
+
+    .info-box {
+      background-color: rgba(0, 255, 132, 0.1);
+      border: 1px solid rgba(0, 255, 132, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #66ffaa;
+      font-size: clamp(12px, 3vw, 14px);
+      line-height: 1.4;
+    }
+
+    .admin-info {
+      background-color: rgba(255, 165, 0, 0.1);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      color: #ffcc66;
+    }
+
+    .timer {
+      font-size: clamp(16px, 4vw, 18px);
+      font-weight: bold;
+      color: #00ff84;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .email-providers-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .email-provider {
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+      max-width: 150px;
+    }
+
+    .email-provider p {
+      margin-top: 10px;
+      color: #00ff84;
+      font-size: clamp(13px, 3vw, 14px);
+    }
+
+    /* Mobile-specific optimizations */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 20px 15px;
+        margin: 5px;
+        border-radius: 16px;
+      }
+      
+      .step {
+        padding: 20px 12px;
+        margin: 10px 0;
+      }
+      
+      .button-group {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .button-group button {
+        width: 100%;
+        margin: 5px 0;
+      }
+      
+      .email-providers-container {
+        gap: 15px;
+      }
+      
+      .email-provider {
+        min-width: 100px;
+      }
+      
+      .gmail-logo-wrapper, .outlook-logo-wrapper {
+        width: 80px;
+        height: 80px;
+      }
+
+      textarea {
+        font-size: 13px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px 10px;
+      }
+      
+      .step {
+        padding: 15px 8px;
+      }
+      
+      input {
+        max-width: 100%;
+        padding: 12px 10px;
+      }
+      
+      .email-providers-container {
+        gap: 10px;
+      }
+      
+      .gmail-logo-wrapper, .outlook-logo-wrapper {
+        width: 70px;
+        height: 70px;
+      }
+
+      .info-box {
+        padding: 12px;
+      }
+
+      .info-box ol, .info-box ul {
+        padding-left: 15px;
+      }
+    }
+
+    /* Landscape mobile optimization */
+    @media (max-height: 600px) and (orientation: landscape) {
+      body {
+        padding: 5px;
+      }
+      
+      .container {
+        padding: 15px;
+        margin: 5px;
+      }
+      
+      .step {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📧 User Registration</h1>
+    <p class="subtitle">Register your email to communicate through admin's WhatsApp</p>
+
+    <!-- Step 1: WhatsApp Number Input (no QR scanning) -->
+    <div id="step1" class="step active">
+      <h3>Your WhatsApp Number</h3>
+      <div class="info-box admin-info">
+        <p><strong>📱 New System:</strong> You only provide your WhatsApp number for identification. All communication happens through the admin's WhatsApp number.</p>
+      </div>
+      <div class="form-group">
+        <input type="tel" id="whatsappNumber" placeholder="e.g., 923001234567" required />
+      </div>
+      <button id="startBtn" onclick="startUserRegistration()">Continue to Email</button>
+    </div>
+
+    <!-- User Exists Confirmation -->
+    <div id="userExistsStep" class="step">
+      <h3>⚠️ User Already Exists</h3>
+      <div class="user-exists-message">
+        <p><strong>You have already registered with this number.</strong></p>
+        <p>Do you want to register again? This will delete your previous registration data.</p>
+      </div>
+      <div class="button-group">
+        <button class="warning-button" onclick="forceRegister()">Yes, Register Again</button>
+        <button class="cancel-button" onclick="cancelRegistration()">No, Cancel</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Email Authentication -->
+    <div id="step2" class="step">
+      <h3>📧 Email Authentication</h3>
+      <div class="info-box">
+        <p><strong>✨ What happens next:</strong> After email authentication, you can send messages and documents to the admin's WhatsApp number to interact with the system.</p>
+      </div>
+      <p>Choose your email provider:</p>
+      
+      <div class="email-providers-container">
+        <div class="email-provider">
+          <a onclick="authenticateGmail()" style="display:inline-block; margin-top:20px;">
+            <div class="gmail-logo-wrapper">
+              <img src="/assets/ggl.png" alt="Google Login" class="email-logo" />
+            </div>
+          </a>
+          <p>Gmail</p>
+        </div>
+
+        <div class="email-provider">
+          <a onclick="authenticateOutlook()" style="display:inline-block; margin-top:20px;">
+            <div class="outlook-logo-wrapper">
+              <img src="/assets/outlook.png" alt="Outlook Login" class="email-logo outlook-logo" />
+            </div>
+          </a>
+          <p>Outlook</p>
+        </div>
+      </div>
+      
+      <div id="emailStatus" class="status success" style="display: none;"></div>
+    </div>
+
+    <!-- Step 3: Registration Complete -->
+    <div id="step3" class="step">
+      <h3>✅ Registration Complete</h3>
+      <div id="completionStatus" class="status success"></div>
+      <div class="info-box">
+        <p><strong>🎉 You're all set!</strong></p>
+        <p>To interact with the system:</p>
+        <ul style="text-align: left; display: inline-block;">
+          <li>Send messages to the admin's WhatsApp number</li>
+          <li>Send documents/images for analysis</li>
+          <li>The system will respond through the admin's number</li>
+        </ul>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div id="actionButtons" class="button-group" style="margin-top: 30px; display: none;">
+        <button class="whatsapp-button" onclick="startUsingSystem()">
+          Start Using System
+        </button>
+        <button class="return-button" onclick="returnToRegistration()">
+          Return to Registration
+        </button>
+      </div>
+      
+      <div class="timer" id="timer" style="display: none;"></div>
+      
+      <!-- WhatsApp Contact Info -->
+      <div id="whatsappInfo" class="info-box admin-info" style="display: none; margin-top: 20px;">
+        <p><strong>📱 Next Step:</strong></p>
+        <p>Send your first message to check your email queue and start using the system!</p>
+        <p style="font-size: 12px; color: #ffcc66;">Note: This message will check for pending emails or confirm system readiness 📤</p>
+      </div>
+    </div>
+
+    <div id="statusMessages" style="text-align:center;"></div>
+  </div>
+
+  <script>
+    // Configuration - Update this with your backend URL
+    const BACKEND_URL = 'https://aaf5fe64ef5d.ngrok-free.app';
+    
+    // Listen for messages from the popup window
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.status === 'success') {
+        console.log(`Received success message from ${event.data.provider} auth window`);
+        verifyEmailAuthentication();
+      }
+    });
+    
+    let outlookRedirectUri = BACKEND_URL;
+    let gmailRedirectUri = BACKEND_URL;
+
+    console.log("👉 BACKEND_URL:", BACKEND_URL);
+
+    // Try to fetch config from backend, fallback to environment variable
+    // fetch(`${BACKEND_URL}/api/config`)
+    fetch(`${BACKEND_URL}/api/config`, {
+        method: "GET",
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        },
+      })
+      .then(response => response.json())
+      .then(config => {
+        console.log("Received config:", config);
+        outlookRedirectUri = config.config.baseUrl || config.config.server_url || BACKEND_URL;
+        gmailRedirectUri = config.config.baseUrl || config.config.server_url || BACKEND_URL;
+        console.log("Config loaded - Outlook URI:", outlookRedirectUri, "Gmail URI:", gmailRedirectUri);
+      })
+      .catch(error => {
+        console.error("Failed to fetch config:", error);
+        // Use the backend URL from configuration
+        outlookRedirectUri = BACKEND_URL;
+        gmailRedirectUri = BACKEND_URL;
+      });
+
+    let currentStep = 1;
+    let userID = '';
+    let emailAuthenticated = false;
+    let timerInterval;
+    let timeLeft = 3; // Shorter timer for user registration
+    let userEmailProvider = ''; // Track the email provider selected by the user
+
+    function showStep(step) {
+      clearAllIntervals();
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      if (step === 'userExists') {
+        document.getElementById('userExistsStep').classList.add('active');
+      } else {
+        document.getElementById(`step${step}`).classList.add('active');
+        currentStep = step;
+      }
+    }
+
+    function clearAllIntervals() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function showStatus(message, type = 'success') {
+      const statusDiv = document.getElementById('statusMessages');
+      statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+      setTimeout(() => statusDiv.innerHTML = '', 5000);
+    }
+
+    async function startUserRegistration() {
+      const whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+      const startBtn = document.getElementById('startBtn');
+
+      if (!whatsappNumber) {
+        showStatus('Please enter your WhatsApp number', 'error');
+        return;
+      }
+
+      startBtn.disabled = true;
+      startBtn.textContent = 'Processing...';
+      userID = whatsappNumber;
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/user-register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userID, whatsappNumber })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          showStatus('User registration initiated successfully!', 'success');
+          showStep(2);
+        } else if (result.message === 'userExists') {
+          showStep('userExists');
+        } else {
+          showStatus(`Error: ${result.message}`, 'error');
+          startBtn.disabled = false;
+          startBtn.textContent = 'Continue to Email';
+        }
+      } catch (error) {
+        showStatus(`Network error: ${error.message}`, 'error');
+        startBtn.disabled = false;
+        startBtn.textContent = 'Continue to Email';
+      }
+    }
+
+    async function forceRegister() {
+      const whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+      
+      try {
+        showStatus('Removing previous registration...', 'warning');
+        
+        const response = await fetch(`${BACKEND_URL}/api/user-force-register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userID, whatsappNumber })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          showStatus('Previous data removed. Continuing with email...', 'success');
+          showStep(2);
+        } else {
+          showStatus(`Error: ${result.message}`, 'error');
+          showStep(1);
+          document.getElementById('startBtn').disabled = false;
+          document.getElementById('startBtn').textContent = 'Continue to Email';
+        }
+      } catch (error) {
+        showStatus(`Network error: ${error.message}`, 'error');
+        showStep(1);
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('startBtn').textContent = 'Continue to Email';
+      }
+    }
+
+    function cancelRegistration() {
+      showStep(1);
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('startBtn').textContent = 'Continue to Email';
+      document.getElementById('whatsappNumber').value = '';
+      userID = '';
+      showStatus('Registration cancelled', 'warning');
+    }
+
+    function authenticateOutlook() {
+      console.log("Opening Outlook auth with URI:", outlookRedirectUri);
+      const authWindow = window.open(`${outlookRedirectUri}/auth/outlook/${userID}`, 'outlookAuth', 'width=600,height=700,scrollbars=yes,resizable=yes');
+      const checkAuth = setInterval(() => {
+        try {
+          if (authWindow.closed) {
+            clearInterval(checkAuth);
+            verifyEmailAuthentication();
+          }
+        } catch (e) {}
+      }, 1000);
+    }
+
+    function authenticateGmail() {
+      const authWindow = window.open(`${gmailRedirectUri}/auth/gmail/${userID}`, 'gmailAuth', 'width=600,height=700,scrollbars=yes,resizable=yes');
+      const checkAuth = setInterval(() => {
+        try {
+          if (authWindow.closed) {
+            clearInterval(checkAuth);
+            verifyEmailAuthentication();
+          }
+        } catch (e) {
+          console.error("Error checking auth window:", e);
+        }
+      }, 1000);
+    }
+
+    // Keep track of verification attempts
+    let verificationAttempts = 0;
+    
+    async function verifyEmailAuthentication() {
+      try {
+        console.log("Verifying email authentication for user:", userID);
+        verificationAttempts++;
+        
+        // Give the server some time to process the authentication
+        // Use longer delay on subsequent attempts
+        const delayMs = verificationAttempts === 1 ? 1000 : 2000;
+        console.log(`Waiting ${delayMs}ms before verification attempt ${verificationAttempts}...`);
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        
+        // Make the API request to check authentication status
+        // const response = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`);
+        const response = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`, {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
+        });
+
+        const result = await response.json();
+        console.log("Auth verification result:", result);
+        
+        if (result.success && (result.authenticated || result.emailAuth)) {
+          // Authentication successful
+          emailAuthenticated = true;
+          const provider = result.provider || result.emailProvider || "Email";
+          userEmailProvider = provider; // Save the provider for later use
+          console.log(`User authenticated with provider: ${provider}`);
+          
+          // Update UI
+          const emailStatus = document.getElementById('emailStatus');
+          emailStatus.textContent = `✅ ${provider} authenticated successfully!`;
+          emailStatus.className = 'status success';
+          emailStatus.style.display = 'block';
+          
+          // Proceed to next step
+          setTimeout(() => {
+            showStep(3);
+            startCompletionTimer();
+          }, 2000);
+        } else if (verificationAttempts < 5) {
+          // Try again if we haven't exceeded max attempts
+          console.log(`Authentication not confirmed yet. Attempt ${verificationAttempts}/5`);
+          setTimeout(verifyEmailAuthentication, 2000);
+        } else {
+          const emailStatus = document.getElementById('emailStatus');
+          emailStatus.textContent = '❌ Email authentication failed or was cancelled';
+          emailStatus.className = 'status error';
+          emailStatus.style.display = 'block';
+          setTimeout(() => {
+            emailStatus.style.display = 'none';
+          }, 3000);
+        }
+      } catch (error) {
+        showStatus(`Error verifying authentication: ${error.message}`, 'error');
+      }
+    }
+
+    function startCompletionTimer() {
+      const completionStatus = document.getElementById('completionStatus');
+      completionStatus.textContent = '✅ Email authenticated successfully!';
+      document.getElementById('timer').style.display = 'block';
+
+      timerInterval = setInterval(() => {
+        document.getElementById('timer').textContent = `Setting up your account in ${timeLeft} seconds...`;
+        timeLeft--;
+        if (timeLeft < 0) {
+          clearInterval(timerInterval);
+          finishUserRegistration();
+        }
+      }, 1000);
+    }
+
+    async function finishUserRegistration() {
+      clearInterval(timerInterval);
+      try {
+        // Use the saved provider if available, otherwise get the latest from the server
+        let emailProvider = userEmailProvider;
+        
+        if (!emailProvider) {
+          console.log('No saved provider, fetching from server...');
+          const authResponse = await fetch(`${BACKEND_URL}/api/verify-auth/${userID}`);
+          const authResult = await authResponse.json();
+          emailProvider = authResult.provider || authResult.emailProvider || 'outlook';
+        }
+        
+        console.log(`Completing registration with provider: ${emailProvider}`);
+        
+        const response = await fetch(`${BACKEND_URL}/api/user-complete-registration`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            userID,
+            emailProvider 
+          })
+        });
+        const result = await response.json();
+        if (result.success) {
+          // Update completion status
+          document.getElementById('completionStatus').textContent = '🎉 User registration completed successfully!';
+          document.getElementById('timer').style.display = 'none';
+          
+          // Show action buttons with a short delay for better UX
+          setTimeout(() => {
+            const actionButtons = document.getElementById('actionButtons');
+            actionButtons.style.display = 'flex';
+            console.log('Action buttons displayed');
+            
+            // Add a subtle highlight effect
+            actionButtons.style.animation = 'pulse-glow 2s ease-in-out';
+          }, 1000);
+          
+          // Optional: Auto-redirect after longer period (60 seconds instead of 30)
+          setTimeout(() => {
+            showStatus('Auto-redirecting to registration page in 5 seconds...', 'warning');
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
+          }, 60000);
+        } else {
+          showStatus(`Error: ${result.message}`, 'error');
+          console.error('Registration completion failed:', result);
+        }
+      } catch (error) {
+        showStatus(`Error: ${error.message}`, 'error');
+        console.error('Registration completion error:', error);
+        
+        // Show action buttons anyway if there's an error, so user isn't stuck
+        setTimeout(() => {
+          document.getElementById('actionButtons').style.display = 'flex';
+          showStatus('Registration may have completed. Try using the system or return to registration.', 'warning');
+        }, 2000);
+      }
+    }
+
+    function startUsingSystem() {
+      // Create a functional message that will trigger system interaction
+      const introMessage = `Shabana Email-WhatsApp is live! 🚀 Launch my email agent or confirm we're clear for takeoff. 📧✨`;
+
+      // Show info about what's happening
+      document.getElementById('whatsappInfo').style.display = 'block';
+      showStatus('Opening admin chat to start using the system...', 'success');
+      
+      const phoneNumber = '922134327805';
+      const encodedMessage = encodeURIComponent(introMessage);
+      
+      // Detect platform for better URL selection
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+      
+      let primaryUrl, fallbackUrl;
+      
+      if (isMobile) {
+        // Mobile: Prefer app links
+        primaryUrl = `whatsapp://send?phone=${phoneNumber}&text=${encodedMessage}`;
+        fallbackUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      } else {
+        // Desktop: Use web version
+        primaryUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`;
+        fallbackUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      }
+      
+      // Try to open WhatsApp
+      if (isMobile) {
+        // Mobile: Try app first, then fallback
+        window.location.href = primaryUrl;
+        
+        // If app doesn't open, try web version after 2 seconds
+        setTimeout(() => {
+          if (document.hasFocus()) {
+            window.open(fallbackUrl, '_blank');
+          }
+        }, 2000);
+      } else {
+        // Desktop: Open in new tab
+        const newWindow = window.open(primaryUrl, '_blank');
+        
+        // If that fails, try fallback
+        if (!newWindow) {
+          setTimeout(() => {
+            window.open(fallbackUrl, '_blank');
+          }, 500);
+        }
+      }
+      
+      // Show manual instructions after 3 seconds if still on page
+      setTimeout(() => {
+        if (document.hasFocus()) {
+          showSystemInstructions(phoneNumber, introMessage);
+        }
+      }, 3000);
+    }
+    
+    function showSystemInstructions(phoneNumber, message) {
+      // Show manual instructions if automatic redirect fails
+      const instructionsHtml = `
+        <div class="info-box" style="background-color: rgba(0, 255, 132, 0.1); border-color: rgba(0, 255, 132, 0.3);">
+          <p><strong>📱 Check Your Email Queue</strong></p>
+          <p>To start using the email system through WhatsApp:</p>
+          <ol style="text-align: left; color: #66ffaa;">
+            <li>Open WhatsApp on your device</li>
+            <li>Start a chat with the admin: <strong>+${phoneNumber}</strong></li>
+            <li>Send this message to check for emails:</li>
+          </ol>
+          <textarea readonly style="width: 100%; height: 120px; margin: 10px 0; padding: 10px; background: #102a43; color: #fff; border: 1px solid #2b445c; border-radius: 8px; font-size: 14px;">${message}</textarea>
+          <div style="margin-top: 10px;">
+            <button onclick="copyToClipboard(\`${message.replace(/`/g, '\\`')}\`)">📋 Copy Message</button>
+            <button onclick="openAdminChat()" style="margin-left: 10px;">💬 Open Admin Chat</button>
+          </div>
+          <p style="font-size: 12px; color: #66ffaa; margin-top: 15px;">
+            💡 <strong>Expected Response:</strong> System will either show pending emails or confirm it's ready for new emails!
+          </p>
+        </div>
+      `;
+      
+      document.getElementById('whatsappInfo').innerHTML = instructionsHtml;
+    }
+    
+    function openAdminChat() {
+      // Simple direct link to admin chat without message
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        window.location.href = 'whatsapp://send?phone=922134327805';
+      } else {
+        window.open('https://web.whatsapp.com/send?phone=922134327805', '_blank');
+      }
+      
+      showStatus('Admin chat opened! Please paste your introduction message.', 'success');
+    }
+    
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showStatus('Introduction message copied! 📋', 'success');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showStatus('Introduction message copied! 📋', 'success');
+      });
+    }
+
+    function returnToRegistration() {
+      showStatus('Returning to registration page...', 'success');
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+
+    window.addEventListener('beforeunload', () => {
+      clearAllIntervals();
+    });
+  </script>
+</body>
+</html>

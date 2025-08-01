@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Authentication Successful - Shabana</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(145deg, #0a192f, #0f2c45);
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 255, 204, 0.05), transparent 60%);
+            animation: moveLight 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes moveLight {
+            0% { transform: translate(0%, 0%); }
+            50% { transform: translate(25%, 25%); }
+            100% { transform: translate(0%, 0%); }
+        }
+
+        body > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            background: rgba(20, 30, 50, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 20px rgba(0, 255, 140, 0.2);
+            text-align: center;
+            margin: 10px;
+        }
+
+        .success-icon {
+            font-size: clamp(48px, 12vw, 72px);
+            color: #00ff84;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        h1 {
+            color: #00ff84;
+            font-size: clamp(24px, 6vw, 32px);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .provider-info {
+            background: rgba(0, 255, 132, 0.1);
+            border: 1px solid rgba(0, 255, 132, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #66ffaa;
+        }
+
+        .status-message {
+            font-size: clamp(14px, 3.5vw, 16px);
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .auto-close-info {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            color: #ffcc66;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: clamp(12px, 3vw, 14px);
+            margin-top: 20px;
+        }
+
+        .close-button {
+            background: linear-gradient(90deg, #00d084, #00ff84);
+            color: #fff;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(14px, 3.5vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+            min-height: 44px;
+        }
+
+        .close-button:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1 id="successTitle">Email Connected Successfully!</h1>
+        
+        <div class="provider-info">
+            <div class="status-message">
+                <strong>🎉 Your email account has been successfully connected!</strong>
+            </div>
+            <div class="status-message" id="providerMessage">
+                Email forwarding to WhatsApp is now active.
+            </div>
+        </div>
+        
+        <div class="status-message">
+            ✨ You can now return to the registration page to complete the setup process.
+        </div>
+        
+        <button class="close-button" onclick="closeWindow()">Close Window</button>
+        
+        <div class="auto-close-info">
+            💡 This window will automatically close in <span id="countdown">5</span> seconds.
+        </div>
+    </div>
+
+    <script>
+        // Get provider from URL parameters if available
+        const urlParams = new URLSearchParams(window.location.search);
+        const provider = urlParams.get('provider') || 'Email';
+        
+        // Update title and message based on provider
+        document.getElementById('successTitle').textContent = `${provider} Connected Successfully!`;
+        document.getElementById('providerMessage').innerHTML = `<strong>${provider}</strong> authentication completed. Email forwarding to WhatsApp is now active.`;
+        
+        // Send success message to parent window
+        if (window.opener) {
+            window.opener.postMessage({
+                status: 'success',
+                provider: provider
+            }, '*');
+        }
+        
+        // Auto-close countdown
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                closeWindow();
+            }
+        }, 1000);
+        
+        function closeWindow() {
+            // Try different methods to close the window
+            if (window.opener) {
+                window.close();
+            } else {
+                // If this doesn't work, try redirecting to parent
+                try {
+                    window.history.back();
+                } catch (e) {
+                    // Last resort - redirect to main page
+                    window.location.href = '/';
+                }
+            }
+        }
+        
+        // Handle cases where window.close() might not work
+        window.addEventListener('beforeunload', () => {
+            clearInterval(timer);
+        });
+    </script>
+</body>
+</html>
