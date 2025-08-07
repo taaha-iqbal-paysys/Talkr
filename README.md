@@ -1,6 +1,6 @@
-# Shabana Frontend - Vercel Deployment
+# Talkr Frontend - Vercel Deployment
 
-This directory contains the frontend for the Shabana Email-WhatsApp Bridge system, designed for deployment on Vercel.
+This directory contains the frontend for the Talkr Email-WhatsApp Bridge system, designed for deployment on Vercel.
 
 ## 📁 Structure
 
@@ -112,7 +112,7 @@ Primary colors are defined in CSS variables:
 
 ### Branding
 - Logo assets in `public/assets/`
-- Brand name "Shabana" used throughout
+- Brand name "Talkr" used throughout
 - Consistent color scheme and typography
 
 ## 📱 Mobile Optimization
@@ -121,13 +121,6 @@ Primary colors are defined in CSS variables:
 - Touch-friendly buttons and inputs
 - Optimized loading for mobile networks
 - Progressive web app capabilities
-
-## 🌐 Domain Configuration
-
-After deployment, you'll get a Vercel URL like:
-- `https://your-project-name.vercel.app`
-
-You can also add custom domains in Vercel dashboard.
 
 ## 📊 Analytics & Monitoring
 

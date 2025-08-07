@@ -87,89 +87,234 @@
     .registration-options {
       display: flex;
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
+      justify-content: center;
       gap: 30px;
-      margin: 40px 0;
+      margin: 40px auto;
+      max-width: 600px;
+      width: 100%;
     }
 
     .option-card {
       background: rgba(15, 30, 50, 0.9);
-      padding: 30px 20px;
-      border-radius: 16px;
-      border: 2px solid transparent;
+      padding: 35px 25px;
+      border-radius: 20px;
+      border: 2px solid rgba(0, 255, 132, 0.2);
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       text-decoration: none;
       color: inherit;
       width: 100%;
+      max-width: 450px;
       display: block;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .option-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 132, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .option-card:hover::before {
+      left: 100%;
     }
 
     .option-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px) scale(1.02);
       border-color: #00ff84;
-      box-shadow: 0 10px 20px rgba(0, 255, 132, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 255, 132, 0.3), 0 5px 15px rgba(0, 255, 132, 0.2);
+      background: rgba(15, 30, 50, 0.95);
     }
 
     .option-icon {
-      font-size: 48px;
+      font-size: 56px;
       margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(0, 255, 132, 0.5);
+      position: relative;
+      z-index: 1;
     }
 
     .option-title {
-      font-size: 22px;
+      font-size: 26px;
       font-weight: bold;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
     }
 
     .user-title {
       color: #00ff84;
+      text-shadow: 0 0 10px rgba(0, 255, 132, 0.3);
     }
 
     .option-description {
-      font-size: 14px;
-      color: #cccccc;
+      font-size: 15px;
+      color: #e0e0e0;
       line-height: 1.6;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     .feature-list {
       list-style: none;
       padding: 0;
-      margin: 15px auto 0 auto;
+      margin: 20px auto 0 auto;
       display: inline-block;
       text-align: left;
     }
 
     .feature-list li {
-      margin: 8px 0;
-      font-size: 13px;
+      margin: 10px 0;
+      font-size: 14px;
+      color: #b8d4c2;
+      transition: color 0.3s ease;
+    }
+
+    .option-card:hover .feature-list li {
+      color: #d0f0d8;
     }
 
     .info-section {
-      background: rgba(0, 255, 132, 0.1);
-      border: 1px solid rgba(0, 255, 132, 0.3);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 30px 0;
+      background: rgba(0, 255, 132, 0.08);
+      border: 2px solid rgba(0, 255, 132, 0.25);
+      border-radius: 16px;
+      padding: 30px 25px;
+      margin: 35px auto;
+      max-width: 700px;
       color: #66ffaa;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 255, 132, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .info-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 132, 0.6), transparent);
+      border-radius: 16px 16px 0 0;
+    }
+
+    .info-section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 255, 132, 0.15);
+      border-color: rgba(0, 255, 132, 0.4);
+    }
+
+    .info-section h3 {
+      font-size: 22px;
+      margin-bottom: 18px;
+      font-weight: 600;
+      text-shadow: 0 0 8px rgba(0, 255, 132, 0.3);
+    }
+
+    .info-section p {
+      font-size: 16px;
+      line-height: 1.7;
+      margin: 0;
     }
 
     .how-it-works {
-      background: rgba(255, 165, 0, 0.1);
-      border: 1px solid rgba(255, 165, 0, 0.3);
+      background: rgba(255, 165, 0, 0.08);
+      border: 2px solid rgba(255, 165, 0, 0.25);
       color: #ffcc66;
+      box-shadow: 0 4px 15px rgba(255, 165, 0, 0.1);
+    }
+
+    .how-it-works::before {
+      background: linear-gradient(90deg, transparent, rgba(255, 165, 0, 0.6), transparent);
+    }
+
+    .how-it-works:hover {
+      box-shadow: 0 8px 25px rgba(255, 165, 0, 0.15);
+      border-color: rgba(255, 165, 0, 0.4);
+    }
+
+    .how-it-works h3 {
+      text-shadow: 0 0 8px rgba(255, 165, 0, 0.3);
+    }
+
+    .communication-steps {
+      margin-top: 20px;
+    }
+
+    .professional-list {
+      text-align: left;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step-counter;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .professional-list li {
+      counter-increment: step-counter;
+      margin: 15px 0;
+      padding: 15px 20px 15px 60px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      border-left: 4px solid rgba(0, 255, 132, 0.6);
+      position: relative;
+      transition: all 0.3s ease;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .professional-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #00ff84, #00d084);
+      color: #0a192f;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0, 255, 132, 0.3);
+    }
+
+    .professional-list li:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateX(5px);
+      border-left-color: #00ff84;
+    }
+
+    .professional-list li strong {
+      color: #00ff84;
+      font-weight: 600;
     }
 
     @media (min-width: 769px) {
       .registration-options {
         flex-direction: row;
         justify-content: center;
+        max-width: 800px;
       }
 
       .option-card {
-        max-width: 100%;
+        max-width: 400px;
+        flex: 1;
       }
     }
 
@@ -190,12 +335,37 @@
       .subtitle {
         font-size: 16px;
       }
+
+      .info-section {
+        padding: 25px 20px;
+        margin: 25px auto;
+      }
+
+      .info-section h3 {
+        font-size: 20px;
+      }
+
+      .info-section p {
+        font-size: 15px;
+      }
+
+      .professional-list li {
+        padding: 12px 15px 12px 50px;
+        font-size: 14px;
+      }
+
+      .professional-list li::before {
+        width: 24px;
+        height: 24px;
+        left: 15px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo">🌟</div>
+    <div class="logo"></div>
     <h1>Talkr</h1>
     <p class="subtitle">Email & WhatsApp Communication Bridge</p>
 
@@ -209,7 +379,7 @@
         <div class="option-icon">👤</div>
         <div class="option-title user-title">User Registration</div>
         <div class="option-description">
-      
+          Regular user email setup
           <ul class="feature-list">
             <li>📧 Email authentication only</li>
             <li>📲 Provide WhatsApp number for ID</li>
@@ -222,12 +392,14 @@
 
     <div class="info-section">
       <h3>✨ How Communication Works</h3>
-      <ol style="text-align: left; margin: 0;">
-        <li><strong>User sends message:</strong> To admin's WhatsApp number</li>
-        <li><strong>System processes:</strong> Email editing, document analysis, etc.</li>
-        <li><strong>Admin relays response:</strong> Back to user through WhatsApp</li>
-        <li><strong>Seamless experience:</strong> Users don't need WhatsApp registration</li>
-      </ol>
+      <div class="communication-steps">
+        <ol class="professional-list">
+          <li><strong>User sends message:</strong> To admin's WhatsApp number</li>
+          <li><strong>System processes:</strong> Email editing, document analysis, etc.</li>
+          <li><strong>Admin relays response:</strong> Back to user through WhatsApp</li>
+          <li><strong>Seamless experience:</strong> Users don't need WhatsApp registration</li>
+        </ol>
+      </div>
     </div>
   </div>
 </body>

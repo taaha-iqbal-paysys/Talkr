@@ -1,7 +1,7 @@
 {
-  "name": "shabana-frontend",
+  "name": "talkr-frontend",
   "version": "1.0.0",
-  "description": "Frontend for Shabana Email-WhatsApp Bridge system",
+  "description": "Frontend for Talkr Email-WhatsApp Bridge system",
   "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
@@ -9,6 +9,6 @@
     "deploy": "vercel --prod"
   },
   "keywords": ["email", "whatsapp", "bridge", "frontend", "static"],
-  "author": "Shabana Team",
+  "author": "Talkr Team",
   "license": "MIT"
 }
