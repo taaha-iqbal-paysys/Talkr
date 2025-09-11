@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Registration - Talkr</title>
+  <title>User Registration - Shabana</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -640,7 +640,11 @@
         </button>
       </div>
       
+      <!-- WhatsApp Information Section -->
+      <div id="whatsappInfo" style="display: none; margin-top: 20px;"></div>
+      
       <div class="timer" id="timer" style="display: none;"></div>
+      <div style="margin-top: 15px;">
         <p style="font-size: 12px; color: #ffcc66;">Note: This message will check for pending emails or confirm system readiness 📤</p>
       </div>
     </div>
@@ -651,7 +655,7 @@
   <script>
     // Configuration - Update this with your backend URL
     const BACKEND_URL = 'https://talkr.paysyslabs.com';
-    
+    // const BACKEND_URL = '10.0.150.83:8081';
     // Listen for messages from the popup window
     window.addEventListener('message', function(event) {
       if (event.data && event.data.status === 'success') {
@@ -810,7 +814,7 @@
             verification_code: generatedCode
           })
         });
-
+      
         const result = await response.json();
         
         if (result.success) {
@@ -1333,7 +1337,7 @@
 
     function startUsingSystem() {
       // Create a functional message that will trigger system interaction
-      const introMessage = `Talkr Email-WhatsApp is live! 🚀 Launch my email agent or confirm we're clear for takeoff. 📧✨`;
+      const introMessage = `Shabana Email-WhatsApp is live! 🚀 Launch my email agent or confirm we're clear for takeoff. 📧✨`;
 
       // Show info about what's happening
       document.getElementById('whatsappInfo').style.display = 'block';
@@ -1359,27 +1363,34 @@
         fallbackUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
       }
       
-      // Try to open WhatsApp
-      if (isMobile) {
-        // Mobile: Try app first, then fallback
-        window.location.href = primaryUrl;
-        
-        // If app doesn't open, try web version after 2 seconds
-        setTimeout(() => {
-          if (document.hasFocus()) {
-            window.open(fallbackUrl, '_blank');
-          }
-        }, 2000);
-      } else {
-        // Desktop: Open in new tab
-        const newWindow = window.open(primaryUrl, '_blank');
-        
-        // If that fails, try fallback
-        if (!newWindow) {
+      // Try to open WhatsApp immediately
+      try {
+        if (isMobile) {
+          // Mobile: Try app first, then fallback
+          window.location.href = primaryUrl;
+          
+          // If app doesn't open, try web version after 2 seconds
           setTimeout(() => {
-            window.open(fallbackUrl, '_blank');
-          }, 500);
+            if (document.hasFocus()) {
+              window.open(fallbackUrl, '_blank');
+            }
+          }, 2000);
+        } else {
+          // Desktop: Open in new tab
+          const newWindow = window.open(primaryUrl, '_blank');
+          
+          // If that fails, try fallback
+          if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+            setTimeout(() => {
+              window.open(fallbackUrl, '_blank');
+            }, 500);
+          }
         }
+      } catch (error) {
+        console.error('Error opening WhatsApp:', error);
+        // Fallback to manual instructions immediately if automatic fails
+        showSystemInstructions(phoneNumber, introMessage);
+        return;
       }
       
       // Show manual instructions after 3 seconds if still on page
