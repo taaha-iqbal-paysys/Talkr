@@ -766,15 +766,19 @@
         if (verificationTimeLeft < 0) {
           clearInterval(verificationTimerInterval);
           timerElement.textContent = 'Code Expired';
-          generateNewBtn.disabled = false;
-          generateNewBtn.textContent = 'Generate New Code';
+          if (generateNewBtn) {
+            generateNewBtn.disabled = false;
+            generateNewBtn.textContent = 'Generate New Code';
+          }
         }
       }, 1000);
       
       // Enable generate new code button after 2 minutes
       setTimeout(() => {
-        generateNewBtn.disabled = false;
-        generateNewBtn.textContent = 'Generate New Code';
+        if (generateNewBtn) {
+          generateNewBtn.disabled = false;
+          generateNewBtn.textContent = 'Generate New Code';
+        }
       }, 120000); // 2 minutes
     }
 
@@ -798,12 +802,55 @@
       }
 
       startBtn.disabled = true;
-      startBtn.textContent = 'Generating Code...';
-      userID = whatsappNumber;
+      startBtn.textContent = 'Checking...';
+      userID = whatsappNumber.replace('+', ''); // Remove + for userID as backend expects
 
       try {
+        // Check if user exists - NEW BEHAVIOR: Does not create user
+        const userCheckResponse = await fetch(`${BACKEND_URL}/api/user-register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            userID: userID, 
+            whatsappNumber: whatsappNumber 
+          })
+        });
+
+        const userCheckResult = await userCheckResponse.json();
+        console.log('User check result:', userCheckResult);
+        
+        if (userCheckResult.success) {
+          // User doesn't exist, can proceed with verification
+          showStatus('New user! Generating verification code...', 'success');
+          await generateAndRegisterVerificationCode(whatsappNumber);
+        } else if (userCheckResult.message === 'userExists') {
+          // User already exists, show confirmation step
+          showStep('userExists');
+          startBtn.disabled = false;
+          startBtn.textContent = 'Continue';
+        } else {
+          showStatus(`Error: ${userCheckResult.message || userCheckResult.error}`, 'error');
+          startBtn.disabled = false;
+          startBtn.textContent = 'Continue';
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+        showStatus(`Network error: ${error.message}`, 'error');
+        startBtn.disabled = false;
+        startBtn.textContent = 'Continue';
+      }
+    }
+
+    async function generateAndRegisterVerificationCode(whatsappNumber) {
+      const startBtn = document.getElementById('startBtn');
+      
+      try {
+        startBtn.textContent = 'Generating Code...';
+        console.log('Generating verification code for:', whatsappNumber);
+        
         // Generate verification code locally
         generatedCode = generateVerificationCode();
+        console.log('Generated code:', generatedCode);
         
         // Register the verification request with backend
         const response = await fetch(`${BACKEND_URL}/api/register-verification`, {
@@ -816,6 +863,7 @@
         });
       
         const result = await response.json();
+        console.log('Register verification result:', result);
         
         if (result.success) {
           verificationId = result.verification_id;
@@ -830,12 +878,13 @@
         } else {
           showStatus(`Error: ${result.error}`, 'error');
           startBtn.disabled = false;
-          startBtn.textContent = 'Send Verification Code';
+          startBtn.textContent = 'Continue';
         }
       } catch (error) {
+        console.error('Generate verification error:', error);
         showStatus(`Network error: ${error.message}`, 'error');
         startBtn.disabled = false;
-        startBtn.textContent = 'Send Verification Code';
+        startBtn.textContent = 'Continue';
       }
     }
 
@@ -884,7 +933,7 @@
       }
       
       // Update UI to show that user should now check verification
-      showVerificationStatus('✅ WhatsApp opened! Send the code and then click "Check Verification Status"', 'success');
+      showVerificationStatus('✅ WhatsApp opened! Send the code and then wait for automatic verification', 'success');
       
       // Start auto-polling for verification after user opens WhatsApp
       startVerificationPolling();
@@ -916,7 +965,7 @@
             <button onclick="openSystemChat()" style="margin-left: 10px;">💬 Open System Chat</button>
           </div>
           <p style="font-size: 12px; color: #66ffaa; margin-top: 15px;">
-            💡 After sending the code, click "Check Verification Status" above to continue.
+            💡 Verification will be detected automatically once you send the code.
           </p>
         </div>
       `;
@@ -963,47 +1012,6 @@
       });
     }
 
-    async function checkVerificationStatus() {
-      const checkBtn = document.getElementById('checkVerificationBtn');
-      checkBtn.disabled = true;
-      checkBtn.textContent = 'Checking...';
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/check-verification`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            verification_id: verificationId,
-            whatsapp_number: userID
-          })
-        });
-
-        const result = await response.json();
-        
-        if (result.success && result.verified) {
-          clearInterval(verificationTimerInterval);
-          showVerificationStatus('✅ Phone verified successfully!', 'success');
-          
-          // Complete user registration
-          setTimeout(async () => {
-            await completeUserRegistration();
-          }, 1500);
-        } else if (result.success && !result.verified) {
-          showVerificationStatus('⏳ Verification pending. Please send the code first.', 'warning');
-          checkBtn.disabled = false;
-          checkBtn.textContent = 'Check Verification Status';
-        } else {
-          showVerificationStatus(`❌ ${result.error}`, 'error');
-          checkBtn.disabled = false;
-          checkBtn.textContent = 'Check Verification Status';
-        }
-      } catch (error) {
-        showVerificationStatus(`Network error: ${error.message}`, 'error');
-        checkBtn.disabled = false;
-        checkBtn.textContent = 'Check Verification Status';
-      }
-    }
-
     async function completeUserRegistration() {
       try {
         // Stop polling since we're completing
@@ -1015,7 +1023,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             verification_id: verificationId,
-            whatsapp_number: userID,
+            whatsapp_number: `+${userID}`, // Add + back for whatsapp_number
             email_provider: userEmailProvider
           })
         });
@@ -1052,7 +1060,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
               verification_id: verificationId,
-              whatsapp_number: userID
+              whatsapp_number: `+${userID}` // Add + back for whatsapp_number
             })
           });
 
@@ -1089,50 +1097,9 @@
       }, 300000); // 5 minutes
     }
 
-    async function generateNewCode() {
-      const generateBtn = document.getElementById('generateNewCodeBtn');
-      generateBtn.disabled = true;
-      generateBtn.textContent = 'Generating...';
-
-      try {
-        // Generate new code
-        generatedCode = generateVerificationCode();
-        
-        const response = await fetch(`${BACKEND_URL}/api/regenerate-verification`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            verification_id: verificationId,
-            new_verification_code: generatedCode
-          })
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-          document.getElementById('generatedCode').textContent = generatedCode;
-          showVerificationStatus('✅ New code generated!', 'success');
-          startVerificationTimer(); // Restart timer
-        } else {
-          showVerificationStatus(`❌ ${result.error}`, 'error');
-          generateBtn.disabled = false;
-          generateBtn.textContent = 'Generate New Code';
-        }
-      } catch (error) {
-        showVerificationStatus(`Network error: ${error.message}`, 'error');
-        generateBtn.disabled = false;
-        generateBtn.textContent = 'Generate New Code';
-      }
-    }
-
-    async function startUserRegistration() {
-      // This function is now handled by the verification flow
-      // Redirect to verification for compatibility
-      requestVerification();
-    }
-
     async function forceRegister() {
       const whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+      const cleanUserID = whatsappNumber.replace('+', ''); // Remove + for userID
       
       try {
         showStatus('Removing previous registration...', 'warning');
@@ -1140,31 +1107,40 @@
         const response = await fetch(`${BACKEND_URL}/api/user-force-register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userID, whatsappNumber })
+          body: JSON.stringify({ 
+            userID: cleanUserID, 
+            whatsappNumber: whatsappNumber 
+          })
         });
 
         const result = await response.json();
+        console.log('Force register result:', result);
+        
         if (result.success) {
-          showStatus('Previous data removed. Continuing with email...', 'success');
-          showStep(2);
+          showStatus('Previous data removed. Generating verification code...', 'success');
+          // Update global userID
+          userID = cleanUserID;
+          // After successful force registration, generate verification code
+          await generateAndRegisterVerificationCode(whatsappNumber);
         } else {
-          showStatus(`Error: ${result.message}`, 'error');
+          showStatus(`Error: ${result.message || result.error}`, 'error');
           showStep(1);
           document.getElementById('startBtn').disabled = false;
-          document.getElementById('startBtn').textContent = 'Continue to Email';
+          document.getElementById('startBtn').textContent = 'Continue';
         }
       } catch (error) {
+        console.error('Force register error:', error);
         showStatus(`Network error: ${error.message}`, 'error');
         showStep(1);
         document.getElementById('startBtn').disabled = false;
-        document.getElementById('startBtn').textContent = 'Continue to Email';
+        document.getElementById('startBtn').textContent = 'Continue';
       }
     }
 
     function cancelRegistration() {
       showStep(1);
       document.getElementById('startBtn').disabled = false;
-      document.getElementById('startBtn').textContent = 'Continue to Email';
+      document.getElementById('startBtn').textContent = 'Continue';
       document.getElementById('whatsappNumber').value = '';
       userID = '';
       showStatus('Registration cancelled', 'warning');
